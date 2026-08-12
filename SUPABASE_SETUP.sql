@@ -1,5 +1,6 @@
 -- Paducah Land Dashboard - Supabase setup
 -- Run this once in Supabase Dashboard > SQL Editor.
+-- PUBLIC EDITING VERSION: anyone with the dashboard link can update existing parcels.
 
 create table if not exists public.parcels (
   id text primary key,
@@ -16,7 +17,7 @@ create table if not exists public.parcels (
 
 alter table public.parcels enable row level security;
 
--- Public visitors can view the dashboard.
+-- Everyone can view parcel records.
 drop policy if exists "public read parcels" on public.parcels;
 create policy "public read parcels"
 on public.parcels
@@ -24,17 +25,18 @@ for select
 to anon, authenticated
 using (true);
 
--- Only signed-in Supabase users can modify parcel records.
+-- Everyone can update EXISTING parcel records.
+-- No public insert or delete policy is created.
 drop policy if exists "authenticated update parcels" on public.parcels;
-create policy "authenticated update parcels"
+drop policy if exists "public update parcels" on public.parcels;
+create policy "public update parcels"
 on public.parcels
 for update
-to authenticated
+to anon, authenticated
 using (true)
 with check (true);
 
-grant select on public.parcels to anon;
-grant select, update on public.parcels to authenticated;
+grant select, update on public.parcels to anon, authenticated;
 
 insert into public.parcels (id, owner, acres, status)
 values
