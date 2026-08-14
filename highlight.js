@@ -4,13 +4,13 @@
     const visible = filtered();
     const parcelPaths = Array.from(svg.querySelectorAll('.parcel'));
     const outlines = Array.from(svg.querySelectorAll('.outline'));
-    const hasSelection = !!selected;
 
     parcelPaths.forEach((path, index) => {
       const parcel = visible[index];
       const isSelected = parcel && parcel.id === selected;
 
-      path.style.opacity = hasSelection && !isSelected ? '0.38' : '1';
+      // Keep every non-selected parcel at its normal appearance.
+      path.style.opacity = '1';
       path.style.fillOpacity = isSelected ? '0.78' : '0.38';
       path.style.stroke = isSelected ? '#ffd400' : '#ffffff';
       path.style.strokeWidth = isSelected ? '9px' : '4px';
@@ -18,7 +18,7 @@
 
       const outline = outlines[index];
       if (outline) {
-        outline.style.opacity = hasSelection && !isSelected ? '0.38' : '1';
+        outline.style.opacity = '1';
         outline.style.stroke = isSelected ? '#ffd400' : (COLORS[parcel?.status] || COLORS.Pending);
         outline.style.strokeWidth = isSelected ? '5px' : '2.2px';
       }
@@ -45,8 +45,6 @@
     renderVectors();
   };
 
-  // Existing button handlers were registered before this file loads, so refresh
-  // the map once those handlers clear the current selection.
   ['close', 'cancel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('click', () => setTimeout(renderVectors, 0));
