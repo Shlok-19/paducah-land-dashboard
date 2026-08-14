@@ -4,7 +4,6 @@
   const money2 = n => '$' + Number(n || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
   const parcelTotal = p => Number(p.acres || 0) * Number(p.pricePerAcre || 0);
 
-  // Inject pricing-specific styles without changing the base dashboard stylesheet.
   const style = document.createElement('style');
   style.textContent = `
     .kpi.site-price{grid-column:1/-1;background:#fffaf0;border-color:#ead9b8}
@@ -13,7 +12,8 @@
     .price-box{font-size:9px;color:#6f7b89;text-transform:uppercase;font-weight:800;letter-spacing:.03em}
     .price-box strong{display:block;margin-top:2px;color:#11223d;font-size:11px;text-transform:none;letter-spacing:0}
     .price-unset strong{color:#8a949f;font-weight:650}
-    #fParcelTotal[readonly]{background:#f7f9fb;color:#11223d;font-weight:800}
+    #fPrice[readonly]{background:#f7f9fb;color:#11223d;font-weight:800}
+    #fParcelTotal{font-weight:800;color:#11223d}
   `;
   document.head.appendChild(style);
 
@@ -29,23 +29,42 @@
   if (heading) heading.textContent = 'Land & Price Register';
 
   const fPrice = document.getElementById('fPrice');
+  if (fPrice) {
+    const label = fPrice.closest('.form')?.querySelector('label');
+    if (label) label.textContent = 'Calculated Price / Acre ($)';
+    fPrice.readOnly = true;
+    fPrice.step = '0.01';
+  }
+
   if (fPrice && !document.getElementById('fParcelTotal')) {
     const form = document.createElement('div');
     form.className = 'form';
-    form.innerHTML = '<label>Total Parcel Price ($)</label><input id="fParcelTotal" type="text" readonly>';
-    fPrice.closest('.form').insertAdjacentElement('afterend', form);
+    form.innerHTML = '<label>Total Parcel Price ($)</label><input id="fParcelTotal" type="number" min="0" step="0.01" placeholder="Enter total parcel price">';
+    fPrice.closest('.form').insertAdjacentElement('beforebegin', form);
   }
 
-  function updateDrawerTotal() {
+  function populateTotalFromPerAcre() {
     const total = document.getElementById('fParcelTotal');
-    if (!total) return;
-    const acres = Number(document.getElementById('fAcres')?.value || 0);
-    const perAcre = Number(document.getElementById('fPrice')?.value || 0);
-    total.value = money2(acres * perAcre);
+    const acresEl = document.getElementById('fAcres');
+    const perAcreEl = document.getElementById('fPrice');
+    if (!total || !acresEl || !perAcreEl) return;
+    const acres = Number(acresEl.value || 0);
+    const perAcre = Number(perAcreEl.value || 0);
+    total.value = perAcre > 0 && acres > 0 ? (acres * perAcre).toFixed(2) : '';
   }
 
-  document.getElementById('fPrice')?.addEventListener('input', updateDrawerTotal);
-  document.getElementById('fAcres')?.addEventListener('input', updateDrawerTotal);
+  function calculatePerAcreFromTotal() {
+    const totalEl = document.getElementById('fParcelTotal');
+    const acresEl = document.getElementById('fAcres');
+    const perAcreEl = document.getElementById('fPrice');
+    if (!totalEl || !acresEl || !perAcreEl) return;
+    const total = Number(totalEl.value || 0);
+    const acres = Number(acresEl.value || 0);
+    perAcreEl.value = total > 0 && acres > 0 ? (total / acres).toFixed(6) : '';
+  }
+
+  document.getElementById('fParcelTotal')?.addEventListener('input', calculatePerAcreFromTotal);
+  document.getElementById('fAcres')?.addEventListener('input', calculatePerAcreFromTotal);
 
   function enhancePricingDisplay() {
     const totalSite = parcels.reduce((sum, p) => sum + parcelTotal(p), 0);
@@ -63,10 +82,9 @@
       }
       const hasPrice = p.pricePerAcre !== '' && p.pricePerAcre !== null && p.pricePerAcre !== undefined && Number(p.pricePerAcre) !== 0;
       row.innerHTML = `
-        <div class="price-box ${hasPrice ? '' : 'price-unset'}">Price / Acre<strong>${hasPrice ? money2(p.pricePerAcre) : 'Not set'}</strong></div>
-        <div class="price-box ${hasPrice ? '' : 'price-unset'}">Parcel Total<strong>${hasPrice ? money(parcelTotal(p)) : 'Not set'}</strong></div>`;
+        <div class="price-box ${hasPrice ? '' : 'price-unset'}">Total Parcel Price<strong>${hasPrice ? money(parcelTotal(p)) : 'Not set'}</strong></div>
+        <div class="price-box ${hasPrice ? '' : 'price-unset'}">Price / Acre<strong>${hasPrice ? money2(p.pricePerAcre) : 'Not set'}</strong></div>`;
     });
-    updateDrawerTotal();
   }
 
   const originalRefreshPricing = refresh;
@@ -78,14 +96,16 @@
   const originalOpenParcelPricing = openParcel;
   openParcel = function (id, zoomTo) {
     originalOpenParcelPricing(id, zoomTo);
-    updateDrawerTotal();
+    if (fPrice) fPrice.readOnly = true;
+    populateTotalFromPerAcre();
   };
 
   function exportPricingCSV() {
-    const h = ['Owner','Acres','Status','Price / Acre','Parcel Total Price','Current Position','Next Action','Notes','Last Updated'];
-    const r = parcels.map(p => [p.owner,p.acres,p.status,p.pricePerAcre,parcelTotal(p),p.currentPosition,p.nextAction,p.notes,p.lastUpdated]);
+    const h = ['Owner','Acres','Status','Total Parcel Price','Price / Acre','Current Position','Next Action','Notes','Last Updated'];
+    const r = parcels.map(p => [p.owner,p.acres,p.status,parcelTotal(p),p.pricePerAcre,p.currentPosition,p.nextAction,p.notes,p.lastUpdated]);
     download('Paducah_Land_Price_Register.csv',[h,...r].map(x=>x.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n'),'text/csv');
   }
+
   const csv = document.getElementById('csv');
   if (csv) csv.onclick = exportPricingCSV;
 
