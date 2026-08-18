@@ -6,126 +6,62 @@
 <title>New Orleans–Burlington Barge Logistics Study</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{--navy:#15324d;--blue:#2e76a6;--green:#1f8f5f;--amber:#b87800;--red:#bd3c3c;--bg:#f4f7fa;--card:#fff;--text:#21313f;--muted:#66798a;--line:#d8e1e9;}
-*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
-header{background:var(--navy);color:#fff;padding:18px 22px} header h1{margin:0;font-size:23px} header .sub{font-size:12px;margin-top:5px;color:#d9e6f1}
-main{max-width:1280px;margin:auto;padding:16px} h2{color:var(--navy);font-size:18px;margin:22px 0 10px} h3{color:var(--navy);font-size:13px;margin:0 0 9px}
-.card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px}
-.studybar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.studybar .item{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 11px}.studybar .label{font-size:9px;color:var(--muted);font-weight:700}.studybar .value{font-size:18px;font-weight:800;color:var(--navy);margin-top:4px}.studybar .hint{font-size:9px;color:var(--muted);margin-top:3px}
-.decision{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}.decision .title{font-size:15px;font-weight:800;color:var(--navy)}.overall{min-width:150px;text-align:center;border-radius:9px;padding:8px 10px;font-weight:800}.overall.pass{background:#eaf6f0;color:var(--green)}.overall.check{background:#fff4dc;color:var(--amber)}.overall.fail{background:#fdeceb;color:var(--red)}
-.group{margin-top:12px}.inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.field label{display:flex;align-items:center;gap:5px;font-size:10px;color:#526779;font-weight:700}.info{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#eaf1f6;color:var(--navy);font-size:9px;cursor:help;border:1px solid #cad8e3}.field input{width:100%;padding:8px 9px;margin-top:5px;border:1px solid #bccad5;border-radius:7px;font-size:12px;background:#fff}.help{font-size:9px;color:var(--muted);line-height:1.35;margin-top:4px;min-height:24px}
-.summarygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.statuscard{border:1px solid var(--line);border-radius:9px;padding:9px;background:#fff}.statuscard .sl{font-size:9px;color:var(--muted);font-weight:700}.statuscard .sv{font-size:17px;font-weight:800;margin-top:4px}.statuscard .sn{font-size:9px;color:var(--muted);line-height:1.35;margin-top:4px}.pass{color:var(--green)}.check{color:var(--amber)}.fail{color:var(--red)}
-table{width:100%;border-collapse:collapse;font-size:10px;margin-top:11px}th,td{padding:7px;border-bottom:1px solid #e8edf1;text-align:left}th{background:var(--navy);color:#fff}.resultnote{font-size:10px;line-height:1.45;margin-top:10px;padding:9px 10px;border-radius:7px;background:#f7f9fb;border:1px solid var(--line)}
-#map{height:610px;border-radius:10px}.mapnote{font-size:10px;color:var(--muted);margin-top:6px}
-details{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}summary{cursor:pointer;font-weight:700;color:var(--navy);font-size:12px}details ul{font-size:11px;line-height:1.55;margin:9px 0 0;padding-left:18px}
-@media(max-width:900px){.studybar,.summarygrid,.inputs{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){main{padding:12px}header{padding:16px 14px}.studybar,.summarygrid,.inputs{grid-template-columns:1fr}.decision{align-items:flex-start;flex-direction:column}.overall{width:100%}#map{height:500px}}
+:root{--navy:#15324d;--blue:#2e76a6;--green:#1f8f5f;--amber:#b87800;--red:#bd3c3c;--bg:#f4f7fa;--text:#21313f;--muted:#66798a;--line:#d8e1e9}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}header{background:var(--navy);color:#fff;padding:18px 22px}.head{max-width:1280px;margin:auto;display:flex;justify-content:space-between;gap:18px;align-items:center}h1{margin:0;font-size:23px}.sub{font-size:12px;margin-top:5px;color:#d9e6f1}.nav{display:flex;gap:7px;flex-wrap:wrap}.nav a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.3);padding:7px 10px;border-radius:7px;font-size:11px}.nav a.active{background:#fff;color:var(--navy)}main{max-width:1280px;margin:auto;padding:16px}h2{color:var(--navy);font-size:18px;margin:22px 0 10px}h3{color:var(--navy);font-size:13px;margin:0 0 9px}.card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px}.studybar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.studybar .item{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}.label{font-size:9px;color:var(--muted);font-weight:700}.value{font-size:18px;font-weight:800;color:var(--navy);margin-top:4px}.hint{font-size:9px;color:var(--muted);margin-top:3px}.decision{display:flex;justify-content:space-between;gap:12px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--line)}.dtitle{font-size:15px;font-weight:800;color:var(--navy)}.overall{min-width:150px;text-align:center;border-radius:9px;padding:9px;font-weight:800}.overall.pass{background:#eaf6f0;color:var(--green)}.overall.check{background:#fff4dc;color:var(--amber)}.overall.fail{background:#fdeceb;color:var(--red)}.group{margin-top:13px}.inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.field{position:relative}.field label{display:flex;align-items:center;gap:5px;font-size:10px;color:#526779;font-weight:700}.field input{width:100%;padding:8px 9px;margin-top:5px;border:1px solid #bccad5;border-radius:7px;font-size:12px;background:#fff}.info-btn{width:17px;height:17px;border-radius:50%;border:1px solid #b9cad6;background:#eaf1f6;color:var(--navy);font-size:10px;font-weight:800;cursor:pointer;padding:0;line-height:15px}.info-btn:hover,.info-btn:focus{background:var(--navy);color:#fff}.tip{position:absolute;left:0;right:0;top:24px;z-index:20;background:#fff;border:1px solid #aabcca;border-radius:8px;padding:9px 10px;box-shadow:0 8px 22px rgba(21,50,77,.16);font-size:10px;line-height:1.45;color:#40576a}.tip[hidden]{display:none}.summarygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:13px}.statuscard{border:1px solid var(--line);border-radius:9px;padding:9px}.sl{font-size:9px;color:var(--muted);font-weight:700}.sv{font-size:17px;font-weight:800;margin-top:4px}.sn{font-size:9px;color:var(--muted);line-height:1.35;margin-top:4px}.pass{color:var(--green)}.check{color:var(--amber)}.fail{color:var(--red)}table{width:100%;border-collapse:collapse;font-size:10px;margin-top:11px}th,td{padding:7px;border-bottom:1px solid #e8edf1;text-align:left}th{background:var(--navy);color:#fff}.resultnote{font-size:10px;line-height:1.45;margin-top:10px;padding:9px 10px;border-radius:7px;background:#f7f9fb;border:1px solid var(--line)}#map{height:600px;border-radius:10px}.maphead{display:flex;justify-content:space-between;align-items:center;gap:10px}.details-link{display:inline-block;text-decoration:none;background:var(--navy);color:#fff;border-radius:7px;padding:8px 10px;font-size:11px}.mapnote{font-size:10px;color:var(--muted);margin-top:6px}details{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}summary{cursor:pointer;font-weight:700;color:var(--navy);font-size:12px}details ul{font-size:11px;line-height:1.55;margin:9px 0 0;padding-left:18px}@media(max-width:900px){.head{align-items:flex-start;flex-direction:column}.studybar,.summarygrid,.inputs{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){main{padding:12px}header{padding:16px 14px}.studybar,.summarygrid,.inputs{grid-template-columns:1fr}.decision{align-items:flex-start;flex-direction:column}.overall{width:100%}#map{height:500px}.tip{position:static;margin-top:5px}}
 </style>
 </head>
 <body>
-<header><h1>New Orleans → Burlington Barge Logistics Study</h1><div class="sub">Preliminary route and cargo feasibility screen</div></header>
+<header><div class="head"><div><h1>New Orleans → Burlington Barge Logistics Study</h1><div class="sub">Preliminary route and cargo feasibility screen</div></div><nav class="nav"><a class="active" href="./">Constraint Check</a><a href="controls.html">Bridge & Lock Details</a></nav></div></header>
 <main>
 <div class="studybar">
- <div class="item"><div class="label">PREFERRED DESIGN</div><div class="value">400 × 100 ft</div><div class="hint">Length × beam</div></div>
- <div class="item"><div class="label">PREFERRED DRAFT</div><div class="value">8.0 ft</div><div class="hint">Loaded draft</div></div>
- <div class="item"><div class="label">LOCK CONTROL</div><div class="value">600 × 110 ft</div><div class="hint">Shortest chamber × width</div></div>
- <div class="item"><div class="label">BURLINGTON AIR SCREEN</div><div class="value">57.41 ft</div><div class="hint">Current study snapshot</div></div>
+<div class="item"><div class="label">PREFERRED DESIGN</div><div class="value">400 × 100 ft</div><div class="hint">Length × beam</div></div>
+<div class="item"><div class="label">PREFERRED DRAFT</div><div class="value">8.0 ft</div><div class="hint">Loaded draft</div></div>
+<div class="item"><div class="label">LOCK CONTROL</div><div class="value">600 × 110 ft</div><div class="hint">Shortest chamber × width</div></div>
+<div class="item"><div class="label">BURLINGTON AIR SCREEN</div><div class="value">57.41 ft</div><div class="hint">Study snapshot; stage dependent</div></div>
 </div>
-
 <h2>Barge & Cargo Constraint Check</h2>
 <div class="card">
- <div class="decision"><div><div class="title">Will the proposed move pass?</div><div style="font-size:10px;color:var(--muted);margin-top:3px">Enter actual barge and cargo information below.</div></div><div id="overall" class="overall check">CHECK</div></div>
-
- <div class="group"><h3>Route Dimensions</h3><div class="inputs">
-  <div class="field"><label>Barge length (ft) <span class="info" title="Overall barge length from bow to stern. Used to check the 600-ft lock chambers.">i</span></label><input id="L" type="number" value="400"><div class="help">Overall barge length. Checked against lock chamber length.</div></div>
-  <div class="field"><label>Beam (ft) <span class="info" title="Maximum width of the barge. Compared with the 110-ft lock chamber width.">i</span></label><input id="B" type="number" value="100"><div class="help">Maximum barge width. Main route-width constraint is the 110-ft lock.</div></div>
-  <div class="field"><label>Loaded draft (ft) <span class="info" title="Distance from the water surface to the bottom of the loaded barge.">i</span></label><input id="D" type="number" value="8" step="0.1"><div class="help">How deep the loaded barge sits in the water.</div></div>
-  <div class="field"><label>Total air draft (ft) <span class="info" title="Distance from the water surface to the highest point of the barge or cargo.">i</span></label><input id="A" type="number" value="50" step="0.1"><div class="help">Waterline to highest cargo point. Compared with bridge clearance.</div></div>
-  <div class="field"><label>Towboat length (ft) <span class="info" title="Length of the towboat pushing the barge. Added to barge length for one-cut lockage screening.">i</span></label><input id="T" type="number" value="170"><div class="help">Used with barge length to check one-cut lock passage.</div></div>
-  <div class="field"><label>Air allowance (ft) <span class="info" title="Extra vertical safety margin kept below the available bridge clearance.">i</span></label><input id="M" type="number" value="5" step="0.5"><div class="help">Planning margin below the available bridge clearance.</div></div>
- </div></div>
-
- <div class="group"><h3>Weight / Capacity</h3><div class="inputs">
-  <div class="field"><label>Cargo weight (short tons) <span class="info" title="Weight of the equipment or cargo. One short ton equals 2,000 lb.">i</span></label><input id="C" type="number" value="2000"><div class="help">Weight you need to transport. 1 short ton = 2,000 lb.</div></div>
-  <div class="field"><label>Lightship (short tons) <span class="info" title="Weight of the empty barge before cargo. Replace the example with the actual barge lightship weight.">i</span></label><input id="LS" type="number" value="900"><div class="help">Empty barge weight. Replace 900 with actual barge data.</div></div>
-  <div class="field"><label>Block coefficient <span class="info" title="Ratio of actual underwater hull volume to a rectangular box of the same length, beam and draft. Replace 0.90 with the selected barge value if known.">i</span></label><input id="BC" type="number" value="0.90" step="0.01" min="0.5" max="1"><div class="help">Hull-fullness factor. 0.90 is an initial barge screening assumption.</div></div>
-  <div class="field"><label>Reserve (%) <span class="info" title="Percentage of estimated payload capacity intentionally left unused for operating margin.">i</span></label><input id="R" type="number" value="10"><div class="help">Capacity intentionally left unused. Default screening reserve = 10%.</div></div>
- </div></div>
-
- <div class="group"><h3>Cargo Support / Deck</h3><div class="inputs">
-  <div class="field"><label>Cargo footprint length (ft) <span class="info" title="Length of the deck area over which the cargo weight is supported.">i</span></label><input id="FL" type="number" value="100"><div class="help">Length of actual cargo support area on deck.</div></div>
-  <div class="field"><label>Cargo footprint width (ft) <span class="info" title="Width of the deck area over which the cargo weight is supported.">i</span></label><input id="FW" type="number" value="40"><div class="help">Width of actual cargo support area on deck.</div></div>
-  <div class="field"><label>Allowable deck load (psf) <span class="info" title="Barge structural deck rating in pounds per square foot. If unknown, leave at 0 and the deck check will remain CHECK.">i</span></label><input id="DL" type="number" value="0"><div class="help">Enter actual barge deck rating. Leave 0 if unknown.</div></div>
-  <div class="field"><label>Deck load calculated <span class="info" title="Average cargo load over the entered footprint. This does not replace a point-load or grillage analysis.">i</span></label><input id="DLC" type="text" value="—" readonly><div class="help">Calculated average pressure from cargo weight ÷ footprint.</div></div>
- </div></div>
-
- <div class="summarygrid">
-  <div class="statuscard"><div class="sl">ROUTE CLEARANCE</div><div id="routeS" class="sv check">CHECK</div><div id="routeN" class="sn"></div></div>
-  <div class="statuscard"><div class="sl">WEIGHT / DISPLACEMENT</div><div id="weightS" class="sv check">CHECK</div><div id="weightN" class="sn"></div></div>
-  <div class="statuscard"><div class="sl">DECK LOADING</div><div id="deckS" class="sv check">CHECK</div><div id="deckN" class="sn"></div></div>
-  <div class="statuscard"><div class="sl">EST. CARGO CAPACITY</div><div id="capV" class="sv">—</div><div id="capN" class="sn"></div></div>
- </div>
-
- <table><thead><tr><th>Constraint</th><th>Candidate</th><th>Screening limit</th><th>Margin</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table>
- <div id="resultnote" class="resultnote"></div>
+<div class="decision"><div><div class="dtitle">Will the proposed move pass?</div><div class="hint">Enter actual barge and cargo information.</div></div><div id="overall" class="overall check">CHECK</div></div>
+<div class="group"><h3>Route Dimensions</h3><div class="inputs">
+<div class="field"><label>Barge length (ft)<button class="info-btn" type="button" data-help="Overall barge length from bow to stern. The route screen compares it with the shortest 600-ft lock chamber. Longer barges may require special lockage planning.">i</button></label><input id="L" type="number" value="400"><div class="tip" hidden></div></div>
+<div class="field"><label>Beam (ft)<button class="info-btn" type="button" data-help="Maximum width of the barge. The governing routine lock width is 110 ft. A 100-ft beam leaves about 5 ft nominal clearance on each side.">i</button></label><input id="B" type="number" value="100"><div class="tip" hidden></div></div>
+<div class="field"><label>Loaded draft (ft)<button class="info-btn" type="button" data-help="Distance from the water surface to the bottom of the loaded barge. It must remain below the controlling navigation depth. The dashboard uses 9 ft as the preliminary route screen.">i</button></label><input id="D" type="number" value="8" step="0.1"><div class="tip" hidden></div></div>
+<div class="field"><label>Total air draft (ft)<button class="info-btn" type="button" data-help="Distance from the water surface to the highest point of the barge or cargo. It is compared with bridge vertical clearance. Higher river stages reduce available clearance.">i</button></label><input id="A" type="number" value="50" step="0.1"><div class="tip" hidden></div></div>
+<div class="field"><label>Towboat length (ft)<button class="info-btn" type="button" data-help="Length of the towboat pushing the barge. It is added to barge length for the one-cut lockage check, where barge and towboat pass through a lock together.">i</button></label><input id="T" type="number" value="170"><div class="tip" hidden></div></div>
+<div class="field"><label>Air allowance (ft)<button class="info-btn" type="button" data-help="Extra planning margin kept below the available bridge clearance. Example: 50-ft air draft plus a 5-ft allowance uses 55 ft of the bridge-clearance screen.">i</button></label><input id="M" type="number" value="5" step="0.5"><div class="tip" hidden></div></div>
+</div></div>
+<div class="group"><h3>Weight / Capacity</h3><div class="inputs">
+<div class="field"><label>Cargo weight (short tons)<button class="info-btn" type="button" data-help="Weight of the equipment or cargo to be carried. One short ton equals 2,000 lb. The dashboard compares this with an estimated hydrostatic cargo capacity.">i</button></label><input id="C" type="number" value="2000"><div class="tip" hidden></div></div>
+<div class="field"><label>Lightship (short tons)<button class="info-btn" type="button" data-help="Weight of the empty barge before cargo. The example 900 tons is only a placeholder; replace it with the selected barge's actual lightship weight.">i</button></label><input id="LS" type="number" value="900"><div class="tip" hidden></div></div>
+<div class="field"><label>Block coefficient<button class="info-btn" type="button" data-help="Ratio of actual underwater hull volume to a rectangular box of the same length, beam and draft. A value of 0.90 means about 90% of that box volume is displaced. Replace it with actual barge data when known.">i</button></label><input id="BC" type="number" value="0.90" step="0.01" min="0.5" max="1"><div class="tip" hidden></div></div>
+<div class="field"><label>Reserve (%)<button class="info-btn" type="button" data-help="Percentage of estimated payload capacity intentionally left unused. The default 10% reserve provides planning margin for ballast, uncertainty and operating requirements.">i</button></label><input id="R" type="number" value="10"><div class="tip" hidden></div></div>
+</div></div>
+<div class="group"><h3>Cargo Support / Deck</h3><div class="inputs">
+<div class="field"><label>Cargo footprint length (ft)<button class="info-btn" type="button" data-help="Length of the deck area actually supporting the cargo. Together with footprint width it determines average deck pressure.">i</button></label><input id="FL" type="number" value="100"><div class="tip" hidden></div></div>
+<div class="field"><label>Cargo footprint width (ft)<button class="info-btn" type="button" data-help="Width of the deck area actually supporting the cargo. A smaller footprint produces higher deck loading for the same cargo weight.">i</button></label><input id="FW" type="number" value="40"><div class="tip" hidden></div></div>
+<div class="field"><label>Allowable deck load (psf)<button class="info-btn" type="button" data-help="Structural deck rating of the selected barge in pounds per square foot. If unknown, leave 0; the dashboard will return CHECK rather than assuming the deck passes.">i</button></label><input id="DL" type="number" value="0"><div class="tip" hidden></div></div>
+<div class="field"><label>Calculated deck load<button class="info-btn" type="button" data-help="Average cargo pressure calculated from cargo weight divided by footprint area. This does not replace point-load, grillage or structural engineering checks.">i</button></label><input id="DLC" type="text" value="—" readonly><div class="tip" hidden></div></div>
+</div></div>
+<div class="summarygrid">
+<div class="statuscard"><div class="sl">ROUTE CLEARANCE</div><div id="routeS" class="sv check">CHECK</div><div id="routeN" class="sn"></div></div>
+<div class="statuscard"><div class="sl">WEIGHT / DISPLACEMENT</div><div id="weightS" class="sv check">CHECK</div><div id="weightN" class="sn"></div></div>
+<div class="statuscard"><div class="sl">DECK LOADING</div><div id="deckS" class="sv check">CHECK</div><div id="deckN" class="sn"></div></div>
+<div class="statuscard"><div class="sl">EST. CARGO CAPACITY</div><div id="capV" class="sv">—</div><div id="capN" class="sn"></div></div>
 </div>
-
-<h2>Route Map</h2>
-<div id="map"></div><div class="mapnote">Click a bridge or lock for river mile, opening/width and available vertical information.</div>
-
-<details><summary>Study limitations</summary><ul>
-<li>Bridge clearance changes with river stage and must be refreshed for the voyage date.</li>
-<li>Actual controlling depth, shoaling and dredging conditions must be checked before movement.</li>
-<li>Movable bridge status, lock outages and temporary restrictions require current confirmation.</li>
-<li>The exact Burlington unloading location can change the governing air-draft requirement.</li>
-<li>Tow configuration, horsepower, current, wind and maneuverability require marine-operator review.</li>
-<li>Final cargo loading requires actual barge hydrostatics, stability, ballast, freeboard, deck/point-load and grillage checks.</li>
-</ul></details>
+<table><thead><tr><th>Constraint</th><th>Candidate</th><th>Screening limit</th><th>Margin</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table>
+<div id="resultnote" class="resultnote"></div>
+</div>
+<div class="maphead"><h2>Route Map</h2><a class="details-link" href="controls.html">View All Bridge & Lock Information</a></div>
+<div id="map"></div><div class="mapnote">Select any route control for river mile, opening/width and available vertical information.</div>
+<details><summary>Study limitations</summary><ul><li>Bridge clearance changes with river stage and must be refreshed for the voyage date.</li><li>Actual controlling depth, shoaling and dredging conditions must be checked before movement.</li><li>Movable bridge status, lock outages and temporary restrictions require current confirmation.</li><li>The exact Burlington unloading location can change the governing air-draft requirement.</li><li>Tow configuration, horsepower, current, wind and maneuverability require marine-operator review.</li><li>Final cargo loading requires actual barge hydrostatics, stability, ballast, freeboard, deck/point-load and grillage checks.</li></ul></details>
 </main>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="data.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="data.js"></script>
 <script>
-const P=window.BARGE_POINTS;
-const n=id=>{const v=parseFloat(document.getElementById(id).value);return Number.isFinite(v)?v:0};
-const f=(v,d=1)=>Number.isFinite(v)?v.toFixed(d).replace(/\.0$/,''):'—';
-function statusEl(id,status){const e=document.getElementById(id);e.textContent=status;e.className='sv '+status.toLowerCase();}
-function calc(){
- const L=n('L'),B=n('B'),D=n('D'),A=n('A'),T=n('T'),M=n('M'),C=n('C'),LS=n('LS'),BC=n('BC'),R=n('R')/100,FL=n('FL'),FW=n('FW'),DL=n('DL');
- const disp=L*B*D*BC*62.4/2000;
- const cap=Math.max(0,(disp-LS)*(1-R));
- const deckPsf=(FL>0&&FW>0)?C*2000/(FL*FW):NaN;
- document.getElementById('DLC').value=Number.isFinite(deckPsf)?f(deckPsf,0)+' psf':'—';
- const checks=[
-  ['Barge length',L,600,600-L,L>=600,L>400],
-  ['Barge + tow one-cut',L+T,600,600-L-T,L+T>=600,L+T>570],
-  ['Beam / lock width',B,110,110-B,B>=110,B>100],
-  ['Loaded draft',D,9,9-D,D>=9,D>8],
-  ['Air draft + allowance',A+M,57.41,57.41-A-M,A+M>=57.41,A>50],
-  ['Cargo weight / est. capacity',C,cap,cap-C,C>cap,C>.9*cap]
- ];
- let routeFail=checks.slice(0,5).some(x=>x[4]), routeCheck=checks.slice(0,5).some(x=>!x[4]&&x[5]);
- let route=routeFail?'FAIL':routeCheck?'CHECK':'PASS';
- let weight=(LS<=0||BC<=0)?'CHECK':C>cap?'FAIL':C>.9*cap?'CHECK':'PASS';
- let deck='CHECK';
- if(DL>0&&Number.isFinite(deckPsf)) deck=deckPsf>DL?'FAIL':deckPsf>.9*DL?'CHECK':'PASS';
- let overall=(route==='FAIL'||weight==='FAIL'||deck==='FAIL')?'FAIL':(route==='CHECK'||weight==='CHECK'||deck==='CHECK')?'CHECK':'PASS';
- const ov=document.getElementById('overall');ov.textContent=overall;ov.className='overall '+overall.toLowerCase();
- statusEl('routeS',route);statusEl('weightS',weight);statusEl('deckS',deck);
- document.getElementById('routeN').textContent=route==='PASS'?'Within preferred route envelope.':route==='FAIL'?'A route geometry/clearance screen is exceeded.':'Below hard limits but margin is reduced.';
- document.getElementById('weightN').textContent='Required '+f(C,0)+' tons; estimated capacity '+f(cap,0)+' tons.';
- document.getElementById('deckN').textContent=DL>0?'Calculated '+f(deckPsf,0)+' psf vs allowable '+f(DL,0)+' psf.':'Deck rating not entered — structural check remains CHECK.';
- document.getElementById('capV').textContent=f(cap,0)+' tons';document.getElementById('capN').textContent='Estimated displacement '+f(disp,0)+' tons; reserve '+f(R*100,0)+'%.';
- const rows=checks.map(x=>[x[0],f(x[1],1),f(x[2],1),f(x[3],1),x[4]?'FAIL':x[5]?'CHECK':'PASS']);
- rows.push(['Cargo deck loading',Number.isFinite(deckPsf)?f(deckPsf,0)+' psf':'—',DL>0?f(DL,0)+' psf':'Not entered',DL>0&&Number.isFinite(deckPsf)?f(DL-deckPsf,0)+' psf':'—',deck]);
- document.getElementById('rows').innerHTML=rows.map(r=>'<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td><td>'+r[2]+'</td><td>'+r[3]+'</td><td class="'+r[4].toLowerCase()+'"><b>'+r[4]+'</b></td></tr>').join('');
- const rn=document.getElementById('resultnote');
- if(overall==='FAIL') rn.innerHTML='<b>FAIL:</b> At least one entered value exceeds the preliminary route, capacity or deck screen.';
- else if(overall==='CHECK') rn.innerHTML='<b>CHECK:</b> No confirmed overall PASS yet. One or more margins are reduced or required structural data is missing.';
- else rn.innerHTML='<b>PASS — preliminary feasibility screen.</b> Final marine engineering and voyage approval are still required.';
-}
-document.querySelectorAll('input').forEach(x=>x.addEventListener('input',calc));calc();
-const map=L.map('map').setView([39.7,-90.8],6);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
-P.forEach(p=>{const col=p.c==='Lock / Dam'?'#2e76a6':p.c==='Added destination control'?'#23875e':'#6d58a7';L.circleMarker([p.a,p.o],{radius:p.c==='Lock / Dam'?7:5,color:'#fff',weight:1,fillColor:col,fillOpacity:1}).bindPopup('<b>'+p.n+'</b><br>'+p.c+(p.r!=null?'<br>RM '+p.r:'')+(p.w!=null?'<br>Opening/width '+p.w+' ft':'')+(p.v!=null?'<br>Vertical '+p.v+' ft':'')).addTo(map)});
+const P=window.BARGE_POINTS,n=id=>{const v=parseFloat(document.getElementById(id).value);return Number.isFinite(v)?v:0},fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d).replace(/\.0$/,''):'—';
+function setS(id,s){const e=document.getElementById(id);e.textContent=s;e.className='sv '+s.toLowerCase()}
+function calc(){const L=n('L'),B=n('B'),D=n('D'),A=n('A'),T=n('T'),M=n('M'),C=n('C'),LS=n('LS'),BC=n('BC'),R=n('R')/100,FL=n('FL'),FW=n('FW'),DL=n('DL');const disp=L*B*D*BC*62.4/2000,cap=Math.max(0,(disp-LS)*(1-R)),deck=(FL>0&&FW>0)?C*2000/(FL*FW):NaN;document.getElementById('DLC').value=Number.isFinite(deck)?fmt(deck,0)+' psf':'—';const checks=[['Barge length',L,600,600-L,L>=600,L>400,'ft'],['Barge + tow one-cut',L+T,600,600-L-T,L+T>=600,L+T>570,'ft'],['Beam / lock width',B,110,110-B,B>=110,B>100,'ft'],['Loaded draft',D,9,9-D,D>=9,D>8,'ft'],['Air draft + allowance',A+M,57.41,57.41-A-M,A+M>=57.41,A>50,'ft'],['Cargo weight / est. capacity',C,cap,cap-C,C>cap,C>.9*cap,'tons']];const rf=checks.slice(0,5).some(x=>x[4]),rc=checks.slice(0,5).some(x=>!x[4]&&x[5]);const route=rf?'FAIL':rc?'CHECK':'PASS',weight=(LS<=0||BC<=0)?'CHECK':C>cap?'FAIL':C>.9*cap?'CHECK':'PASS';let deckS='CHECK';if(DL>0&&Number.isFinite(deck))deckS=deck>DL?'FAIL':deck>.9*DL?'CHECK':'PASS';const overall=(route==='FAIL'||weight==='FAIL'||deckS==='FAIL')?'FAIL':(route==='CHECK'||weight==='CHECK'||deckS==='CHECK')?'CHECK':'PASS';const oe=document.getElementById('overall');oe.textContent=overall;oe.className='overall '+overall.toLowerCase();setS('routeS',route);setS('weightS',weight);setS('deckS',deckS);document.getElementById('routeN').textContent=route==='PASS'?'Within preferred route envelope.':route==='FAIL'?'A route limit is exceeded.':'Feasible screen with reduced margin.';document.getElementById('weightN').textContent='Required '+fmt(C,0)+' tons; estimated capacity '+fmt(cap,0)+' tons.';document.getElementById('deckN').textContent=DL>0?'Calculated '+fmt(deck,0)+' psf vs allowable '+fmt(DL,0)+' psf.':'Enter the selected barge deck rating for a structural screen.';document.getElementById('capV').textContent=fmt(cap,0)+' tons';document.getElementById('capN').textContent='Estimated displacement '+fmt(disp,0)+' tons; '+fmt(R*100,0)+'% reserve.';let rows=checks.map(x=>[x[0],fmt(x[1],1)+' '+x[6],fmt(x[2],2)+' '+x[6],fmt(x[3],2)+' '+x[6],x[4]?'FAIL':x[5]?'CHECK':'PASS']);rows.push(['Deck loading',Number.isFinite(deck)?fmt(deck,0)+' psf':'—',DL>0?fmt(DL,0)+' psf':'Not entered',DL>0&&Number.isFinite(deck)?fmt(DL-deck,0)+' psf':'—',deckS]);document.getElementById('rows').innerHTML=rows.map(r=>'<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td><td>'+r[2]+'</td><td>'+r[3]+'</td><td class="'+r[4].toLowerCase()+'"><b>'+r[4]+'</b></td></tr>').join('');document.getElementById('resultnote').innerHTML=overall==='PASS'?'<b>PASS — preliminary screen.</b> Final marine engineering and voyage approval are still required.':overall==='FAIL'?'<b>FAIL — one or more entered constraints exceed the current screen.</b> Change the configuration or perform special marine engineering.':'<b>CHECK — additional verification is required before an overall pass can be given.</b>'}
+document.querySelectorAll('input:not([readonly])').forEach(x=>x.addEventListener('input',calc));calc();
+const infoBtns=[...document.querySelectorAll('.info-btn')];function closeTips(except){infoBtns.forEach(b=>{if(b!==except){b.setAttribute('aria-expanded','false');b.closest('.field').querySelector('.tip').hidden=true}})}infoBtns.forEach(b=>{b.setAttribute('aria-expanded','false');b.addEventListener('click',e=>{e.stopPropagation();const tip=b.closest('.field').querySelector('.tip'),opening=tip.hidden;closeTips(b);tip.textContent=b.dataset.help;tip.hidden=!opening;b.setAttribute('aria-expanded',opening?'true':'false')})});document.addEventListener('click',()=>closeTips());document.querySelectorAll('.tip').forEach(t=>t.addEventListener('click',e=>e.stopPropagation()));
+const map=L.map('map').setView([39.65,-90.8],6);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);P.forEach(p=>{const col=p.c==='Lock / Dam'?'#2e76a6':p.c==='Added destination control'?'#23875e':'#6d58a7';L.circleMarker([p.a,p.o],{radius:p.c==='Lock / Dam'?7:5,color:'#fff',weight:1,fillColor:col,fillOpacity:1}).bindPopup('<b>'+p.n+'</b><br>'+p.c+(p.r!=null?'<br>RM '+p.r:'')+(p.w!=null?'<br>Opening / width: '+p.w+' ft':'')+(p.v!=null?'<br>Vertical: '+p.v+' ft':'')+'<br><a href="controls.html">Full route-control table</a>').addTo(map)});
 </script>
 </body></html>
